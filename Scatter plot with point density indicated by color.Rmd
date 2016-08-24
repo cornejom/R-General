@@ -1,0 +1,31 @@
+---
+title: "Untitled"
+author: "Mauricio"
+date: "February 19, 2016"
+output: ioslides_presentation
+---
+
+## Slide with R Code and Output
+```{r}
+cur_dir = getwd()
+setwd("~/Ad Hoc Requests/Uma Patel/Credits Forecasting")
+
+data = read.csv("Revenue and Credits.csv", stringsAsFactors = FALSE)
+data$Credit_Amt_Sum = -1 * data$Credit_Amt_Sum
+
+rev   = with(data, data[Year == 2014, c('NASP_or_CCR', 'TBR_Sum')])
+cred  = with(data, data[Year == 2015, c('NASP_or_CCR', 'Credit_Amt_Sum')])
+merged = merge.data.frame(rev, cred)
+
+library(ggplot2)
+
+p = ggplot(merged[merged$NASP_or_CCR != "10DNFK",], aes(TBR_Sum/1000, Credit_Amt_Sum/1000)) + geom_bin2d(color="white")
+p = p + labs(title="Medium Biz: 2015 Credits vs 2014 Revenue", x="2014 Revenue $K", y="2015 Credits $K")
+p = p + theme(plot.title=element_text(size=rel(2)), axis.title = element_text(size = rel(1.5)))
+```
+
+## Slide with Plot
+```{r, echo=FALSE}
+p + scale_fill_continuous(low = "gray70", high = "black") 
+```
+
